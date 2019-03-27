@@ -9,7 +9,12 @@ import (
 	"strings"
 )
 
-func mainExample() {
+// ExampleMain shows a general usecase for the Markov Chain and the builder. It
+// takes input from `stdin` and trains the markov chain then generates a given
+// number of words nd prints out the fully generated string. The flags can
+// configure the max number of words to generate and the sequence pairing to
+// be used when "training" the markov chain.
+func ExampleMain() {
 	// handle flags
 	maxWords := flag.Int("words", 100, "max words to generate (default 100)")
 	pairSize := flag.Int("pairs", 2, "size of a word pair (default 2)")
