@@ -1,3 +1,14 @@
+/*
+Package markov provides a markov chain implementation which allows you to
+"train" a model using any form of text as input. The markov chain will split
+the text sequence into pairs and then generate the transition mapping.
+
+A Builder implementation also exists, this can be generated on top of a chain
+in order to generate a continuous flow of new words.
+
+MIT License
+Copyright (c) 2019 Alexandru-Paul Copil
+*/
 package markov // import "cpl.li/go/markov"
 
 import (

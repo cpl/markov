@@ -1,14 +1,48 @@
-package markov // import "cpl.li/go/markov"
+package markov_test
 
 import (
+	"flag"
 	"fmt"
+	"io/ioutil"
+	"log"
 	"math"
+	"os"
+	"strings"
 	"testing"
+
+	"cpl.li/go/markov"
 )
+
+// This example shows a general usecase for the Markov Chain and the builder. It
+// takes input from `stdin` and trains the markov chain then generates a given
+// number of words nd prints out the fully generated string. The flags can
+// configure the max number of words to generate and the sequence pairing to
+// be used when "training" the markov chain.
+func Example_basic() {
+	// handle flags
+	maxWords := flag.Int("words", 100, "max words to generate (default 100)")
+	pairSize := flag.Int("pairs", 2, "size of a word pair (default 2)")
+	flag.Parse()
+
+	c := markov.NewChain(*pairSize) // create markov chain
+
+	// read stdin
+	data, err := ioutil.ReadAll(os.Stdin)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// give data as sequence to chain model
+	c.Add(strings.Fields(string(data)))
+
+	b := c.NewBuilder(nil)             // create builder on top of chain
+	b.Generate(*maxWords - c.PairSize) // generate new words
+	fmt.Println(b.String())            // print end product
+}
 
 func TestMarkovBasic(t *testing.T) {
 	// generate unigram chain
-	chain := NewChain(1)
+	chain := markov.NewChain(1)
 
 	// train model
 	chain.Add([]string{"I", "ride", "a", "bike"})
@@ -17,7 +51,7 @@ func TestMarkovBasic(t *testing.T) {
 
 	// test invalid probability
 	if _, err := chain.TransitionProbability(
-		Pair{
+		markov.Pair{
 			Current: []string{"invalid", "sequence"},
 			Next:    "any",
 		}); err == nil {
@@ -27,7 +61,7 @@ func TestMarkovBasic(t *testing.T) {
 
 	// obtain probability
 	prob, err := chain.TransitionProbability(
-		Pair{
+		markov.Pair{
 			Current: []string{"I"},
 			Next:    "ride",
 		})
