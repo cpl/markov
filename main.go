@@ -1,4 +1,4 @@
-package main // import "cpl.li/go/markov"
+package markov // import "cpl.li/go/markov"
 
 import (
 	"flag"
@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-func main() {
+func mainExample() {
 	// handle flags
 	maxWords := flag.Int("words", 100, "max words to generate (default 100)")
 	pairSize := flag.Int("pairs", 2, "size of a word pair (default 2)")

@@ -1,4 +1,4 @@
-package main // import "cpl.li/go/markov"
+package markov // import "cpl.li/go/markov"
 
 import (
 	"errors"
