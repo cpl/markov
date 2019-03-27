@@ -40,6 +40,24 @@ frequencyMatrix map[string]transitionMap
 
 Once your wrap your head around these structures, the rest of the functions are easy to understand.
 
+## Examples
+
+The text below was generated on a 2-paired sequence chain with a student movie script as input.
+
+```text
+You know I can't KEN I understand. KEN opens the door to
+a soaking wet KEN, who stands on the pink scissors and
+picks them up, toying with them. KEN glances around for
+his wallet. DEBRA (Comforting) There's nothing to be
+embarrassed about you know. Lots of people it happens.
+KEN grunts. KEN Yeah. The bird chirps from its cage in
+the corner. KEN tries to scream but is unable to pull in
+oxygen. The pressure in his ears begins to burst as the
+bathtub overflows. 29. A figure appears above him,
+blurry through the water.
+```
+
+
 ## Download & Install
 
 If you have Go installed, you can simply run:
