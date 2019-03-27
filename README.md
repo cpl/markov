@@ -63,7 +63,7 @@ blurry through the water.
 If you have Go installed, you can simply run:
 
 ```shell
-go get cpl.li/go/markov
+go get cpl.li/go/markov/markov-cli
 ```
 
 ## Usage
@@ -80,8 +80,8 @@ import (
 	"log"
 	"os"
 	"strings"
-  
-  "cpl.li/go/markov"
+
+	"cpl.li/go/markov"
 )
 
 func main() {
