@@ -75,13 +75,74 @@ func TestMarkovBasic(t *testing.T) {
 	real := math.Round(prob*100) / 100
 	expected := 0.67
 	if expected != real {
-		fmt.Printf("expected %f got %f\n", expected, real)
-		t.Fail()
+		t.Errorf("expected %f got %f\n", expected, real)
 	}
 
 	// create builder from chain
 	builder := chain.NewBuilder([]string{"I"})
-	if builder.Generate(2) != 2 {
-		t.Errorf("failed to generate 2 new words\n")
+	if gen := builder.Generate(2); gen != 2 {
+		t.Errorf("failed to generate 2 new words, got %d\n", gen)
+	}
+}
+
+func TestSequenceAndPairs(t *testing.T) {
+	// test data
+	testStr := "I am a software engineer"
+	var sequence markov.Sequence
+
+	// split string in sequence
+	sequence = strings.Fields(testStr)
+
+	// test sequence len
+	if len(sequence) != 5 {
+		t.Fail()
+	}
+
+	// test pair generation, valid
+	testSequencePairs(t, sequence, 1, 4)
+	testSequencePairs(t, sequence, 2, 3)
+	testSequencePairs(t, sequence, 3, 2)
+	testSequencePairs(t, sequence, 4, 1)
+
+	// test pair generation, invalid
+	testSequencePairs(t, sequence, 0, 4)
+	testSequencePairs(t, sequence, 9, 1)
+}
+
+func testSequencePairs(t *testing.T, s markov.Sequence, size, expected int) {
+	// test pair generation
+	pairs := s.Pairs(size)
+	if len(pairs) != expected {
+		t.Errorf("sequence.Pairs(%d) expected %d got %d\n",
+			size, expected, len(pairs))
+	}
+}
+
+func TestSingleWordSequence(t *testing.T) {
+	// test data
+	sequence := markov.Sequence{"Test"}
+
+	// attempt generating impossible pair
+	if pair := sequence.Pairs(1); pair != nil {
+		t.Errorf("generated pair/s from invalid sequence %v, %v\n",
+			sequence, pair)
+	}
+
+	// generate chain that will be clamped to pair size 1
+	chain := markov.NewChain(-100)
+	if chain.PairSize != 1 {
+		t.Errorf("NewChain(-100), pair size not clamped, expected 1, got %d\n",
+			chain.PairSize)
+	}
+	chain.Add(sequence)
+
+	// should not work, invalid sequence len
+	if res := chain.Next(markov.Sequence{"I", "am", "root"}); res != "" {
+		t.Errorf("chain generated unexpected token: %s\n", res)
+	}
+
+	// should not work, single word sequence
+	if res := chain.Next(markov.Sequence{"I"}); res != "" {
+		t.Errorf("chain generated unexpected token: %s\n", res)
 	}
 }

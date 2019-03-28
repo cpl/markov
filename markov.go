@@ -35,6 +35,10 @@ func (s Sequence) String() string {
 	return strings.Join(s, " ")
 }
 
+func (s Sequence) isValid() bool {
+	return len(s) > 1
+}
+
 // Pair represents a state transition between a set of 1 or more words and the
 // next word in the Sequence.
 type Pair struct {
@@ -44,6 +48,14 @@ type Pair struct {
 
 // Pairs extracts pairs with states of given size transitioning to new words.
 func (s Sequence) Pairs(size int) []Pair {
+	// invalid sequence size for generating any pairs
+	if !s.isValid() {
+		return nil
+	}
+
+	// clamp size within expected limits
+	size = clamp(size, 1, len(s)-1)
+
 	// generate pairs array
 	pairs := make([]Pair, len(s)-size)
 
@@ -81,6 +93,11 @@ type Chain struct {
 
 // NewChain generates a Chain with pairs of given length.
 func NewChain(pairSize int) *Chain {
+	// clamp
+	if pairSize < 1 {
+		pairSize = 1
+	}
+
 	chain := new(Chain)
 	chain.PairSize = pairSize
 	chain.frequencyMatrix = make(map[string]transitionMap)
@@ -91,6 +108,11 @@ func NewChain(pairSize int) *Chain {
 func (c *Chain) Add(sequence Sequence) {
 	// extract pairs from given sequence
 	pairs := sequence.Pairs(c.PairSize)
+
+	// if sequence is invalid, paris will be nil and we have nothing to do here
+	if pairs == nil {
+		return
+	}
 
 	// iterate pairs
 	for _, pair := range pairs {
