@@ -1,1 +1,1 @@
-module cpl.li/go/markov
+module github.com/cpl/markov
