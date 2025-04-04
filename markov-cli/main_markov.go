@@ -8,7 +8,7 @@ import (
 	"os"
 	"strings"
 
-	"cpl.li/go/markov"
+	"github.com/cpl/markov"
 )
 
 func main() {
